@@ -1,3 +1,3 @@
-const app = require('../dist/index');
+import app from '../src/index'
 
 module.exports = app;
