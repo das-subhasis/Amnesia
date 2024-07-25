@@ -1,12 +1,12 @@
 import express from "express";
-import { PORT } from "../dist/utils/utils";
+import { PORT } from "../src/utils/utils";
 import CORS from "cors"
-import { errorHandler, notFoundHandler } from "../dist/middlewares/errorMiddleware";
-import product from "../dist/routes/productRoutes";
-import order from "../dist/routes/orderRoutes";
-import connectDB from "../dist/utils/config";
-import auth from "../dist/routes/authRoutes";
-import user from "../dist/routes/userRoutes";
+import { errorHandler, notFoundHandler } from "../src/middlewares/errorMiddleware";
+import product from "../src/routes/productRoutes";
+import order from "../src/routes/orderRoutes";
+import connectDB from "../src/utils/config";
+import auth from "../src/routes/authRoutes";
+import user from "../src/routes/userRoutes";
  
 connectDB();
 
@@ -28,4 +28,4 @@ app.listen(3000, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
-module.exports = app;
+export default app;
