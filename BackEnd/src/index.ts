@@ -24,7 +24,7 @@ app.use(notFoundHandler)
 app.use(errorHandler)
 
 app.get('/', (req, res) => res.send("Hi"))
-app.listen(PORT, () => {
+app.listen(3000, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
