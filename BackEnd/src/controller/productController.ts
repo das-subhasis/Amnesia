@@ -38,6 +38,24 @@ const getProductByCategory = expressAsyncHandler(async (req: Request, res: Respo
         res.status(500);
         throw new Error("Internal server error.")
     }
+});
+
+// @route   GET /api/products/:id
+// @desc    Get a product by category
+// @access  Public
+const getProductById = expressAsyncHandler(async (req: Request, res: Response) => {
+    try {
+        const _id = req.params.id;
+        const product = await Product.findById(_id);
+        if (!product) {
+            res.status(404);
+            throw new Error("Product not found.")
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500);
+        throw new Error("Internal server error.")
+    }
 })
 
 // @route   POST /api/products/add
@@ -124,4 +142,4 @@ const updateProductByID = expressAsyncHandler(async (req: Request, res: Response
     }
 })
 
-export { getProducts, getProductByCategory, addProduct, deleteProductByID, updateProductByID, addMultipleProducts }
+export { getProducts, getProductByCategory, getProductById, addProduct, deleteProductByID, updateProductByID, addMultipleProducts }
