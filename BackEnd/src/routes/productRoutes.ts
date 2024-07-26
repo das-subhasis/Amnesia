@@ -4,11 +4,9 @@ import authenticate from "../middlewares/authMiddleware";
 
 const product = Router();
 
-product.get('/', getProducts);
+product.get('/:id', getProducts);
 
-product.get('/:category', getProductByCategory);
-
-product.get('/:category', getProductById);
+product.get('/c/:category', getProductByCategory);
 
 product.post('/add', authenticate, addProduct);
 
@@ -16,6 +14,6 @@ product.post('/add/multiple', authenticate, addMultipleProducts);
 
 product.put('/:id', authenticate, updateProductByID);
 
-product.delete('/:id', authenticate, deleteProductByID);
+product.post('/remove/:id', authenticate, deleteProductByID);
 
 export default product

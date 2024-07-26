@@ -8,12 +8,12 @@ import { ProductInterface } from "../models/userSchema";
 // @access  Public
 const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        const category = req.query.category;
-        if (!category) {
+        const id = req.params.id;
+        if (!id) {
             const product = await Product.find();
             res.json(product);
         }
-        const product = await Product.find({ category });
+        const product = await Product.findById(id);
         res.json(product);
     } catch (error) {
         res.status(500);
@@ -39,24 +39,6 @@ const getProductByCategory = expressAsyncHandler(async (req: Request, res: Respo
         throw new Error("Internal server error.")
     }
 });
-
-// @route   GET /api/products/:id
-// @desc    Get a product by category
-// @access  Public
-const getProductById = expressAsyncHandler(async (req: Request, res: Response) => {
-    try {
-        const _id = req.params.id;
-        const product = await Product.findById(_id);
-        if (!product) {
-            res.status(404);
-            throw new Error("Product not found.")
-        }
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(500);
-        throw new Error("Internal server error.")
-    }
-})
 
 // @route   POST /api/products/add
 // @desc    Create a new product
