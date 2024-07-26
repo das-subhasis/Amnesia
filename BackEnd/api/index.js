@@ -19,7 +19,6 @@ app.use('/api/auth', auth);
 app.use('/api/products', product);
 app.use('/api/orders', order);
 app.use('/api/user', user);
-app.use('/', (req, res) => res.json({ message: "Welcome to my api"}))
 app.use(notFoundHandler)
 app.use(errorHandler)
 
