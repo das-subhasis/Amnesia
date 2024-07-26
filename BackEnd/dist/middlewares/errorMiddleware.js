@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = exports.notFoundHandler = void 0;
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 const notFoundHandler = (req, res, next) => {
     const error = new Error(`address not found - ${req.originalUrl}`);
     res.status(404);

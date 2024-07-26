@@ -26,8 +26,10 @@ const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
 // @access  Public
 const getProductByCategory = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        const category = req.query.category;
-        const product = await Product.find({ category: req.query.category });
+        
+        const category = req.params.category;
+        console.log(category);
+        const product = await Product.find({ category: category });
         if (!product) {
             res.status(404);
             throw new Error("Product not found.")

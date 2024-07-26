@@ -35,12 +35,13 @@ const getProducts = (0, express_async_handler_1.default)((req, res) => __awaiter
 }));
 exports.getProducts = getProducts;
 // @route   GET /api/products/:category
-// @desc    Get a product by ID
+// @desc    Get a product by category
 // @access  Public
 const getProductByCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const category = req.query.category;
-        const product = yield productSchema_1.default.find({ category: req.query.category });
+        const category = req.params.category;
+        console.log(category);
+        const product = yield productSchema_1.default.find({ category: category });
         if (!product) {
             res.status(404);
             throw new Error("Product not found.");
