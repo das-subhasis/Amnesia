@@ -49,7 +49,7 @@ export const updateCart = expressAsyncHandler(async (req: Request, res: Response
     try {
         let user = await User.findOneAndUpdate(
             { _id: req.user._id, "cart.product": _id },
-            { $inc: { "cart.$.quantity": quantity } },
+            { $set: { "cart.$.quantity": quantity } },
             { new: true }
         ).populate("cart.product").select("-password");
 
@@ -108,13 +108,19 @@ export const updateWishList = expressAsyncHandler(async (req: Request, res: Resp
             throw new Error("Product not found.");
         }
 
-        const user = await User.findOneAndUpdate(
-            { _id: userId },
-            { $addToSet: { wishList: product } },
-            { new: true }
+        const existingWishlist = await User.findOne(
+            { _id: userId, "cart._id": _id }
         ).select("-password");
 
-        res.status(200).json(user);
+        if (!existingWishlist) {
+            const wishlist = await User.findOneAndUpdate(
+                { _id: req.user._id },
+                { $addToSet: { wishList: product } },
+                { new: true }
+            ).populate("cart.product").select("-password");
+            res.json(wishlist?.cart);
+        }
+        res.json(existingWishlist?.cart);
     } catch (error) {
         console.error(error);
         res.status(500);

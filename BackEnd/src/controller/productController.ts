@@ -28,7 +28,6 @@ const getProductByCategory = expressAsyncHandler(async (req: Request, res: Respo
     try {
         
         const category = req.params.category;
-        console.log(category);
         const product = await Product.find({ category: category });
         if (!product) {
             res.status(404);
