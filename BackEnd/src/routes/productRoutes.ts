@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { addProduct, addMultipleProducts, deleteProductByID, getProducts, updateProductByID } from "../controller/productController";
+import { addProduct, addMultipleProducts, deleteProductByID, getProducts, updateProductByID, getProductByCategory } from "../controller/productController";
 import authenticate from "../middlewares/authMiddleware";
 
 const product = Router();
 
 product.get('/', getProducts);
+
+product.get('/:category', getProductByCategory);
 
 product.post('/add', authenticate, addProduct);
 
