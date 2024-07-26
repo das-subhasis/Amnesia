@@ -54,7 +54,7 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
 exports.updateCart = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id, quantity } = req.body;
     try {
-        let user = yield userSchema_1.default.findOneAndUpdate({ _id: req.user._id, "cart.product": _id }, { $inc: { "cart.$.quantity": quantity } }, { new: true }).populate("cart.product").select("-password");
+        let user = yield userSchema_1.default.findOneAndUpdate({ _id: req.user._id, "cart.product": _id }, { $set: { "cart.$.quantity": quantity } }, { new: true }).populate("cart.product").select("-password");
         if (!user) {
             user = yield userSchema_1.default.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { cart: { product: _id, quantity } } }, { new: true }).populate("cart.product").select("-password");
         }
@@ -98,8 +98,14 @@ exports.updateWishList = (0, express_async_handler_1.default)((req, res) => __aw
             res.status(404);
             throw new Error("Product not found.");
         }
-        const user = yield userSchema_1.default.findOneAndUpdate({ _id: userId }, { $addToSet: { wishList: product } }, { new: true }).select("-password");
-        res.status(200).json(user);
+        const existingWishlist = yield userSchema_1.default.findOne({ _id: userId, "wishList._id": _id }).select("-password");
+        console.log(existingWishlist);
+        if (!existingWishlist) {
+            console.log('inside');
+            const wishlist = yield userSchema_1.default.findOneAndUpdate({ _id: req.user._id }, { $addToSet: { wishList: product } }, { new: true }).populate("cart.product").select("-password");
+            res.json(wishlist === null || wishlist === void 0 ? void 0 : wishlist.wishList);
+        }
+        res.json(existingWishlist === null || existingWishlist === void 0 ? void 0 : existingWishlist.wishList);
     }
     catch (error) {
         console.error(error);

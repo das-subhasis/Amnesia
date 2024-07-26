@@ -40,7 +40,6 @@ exports.getProducts = getProducts;
 const getProductByCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const category = req.params.category;
-        console.log(category);
         const product = yield productSchema_1.default.find({ category: category });
         if (!product) {
             res.status(404);

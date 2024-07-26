@@ -61,7 +61,7 @@ export const updateCart = expressAsyncHandler(async (req: Request, res: Response
             ).populate("cart.product").select("-password");
         }
 
-        res.json(user);
+        res.json(user?.cart);
     } catch (error) {
         console.error(error);
         res.status(500)
@@ -109,18 +109,20 @@ export const updateWishList = expressAsyncHandler(async (req: Request, res: Resp
         }
 
         const existingWishlist = await User.findOne(
-            { _id: userId, "cart._id": _id }
+            { _id: userId, "wishList._id": _id }
         ).select("-password");
 
         if (!existingWishlist) {
+            console.log('inside');
+            
             const wishlist = await User.findOneAndUpdate(
                 { _id: req.user._id },
                 { $addToSet: { wishList: product } },
                 { new: true }
             ).populate("cart.product").select("-password");
-            res.json(wishlist?.cart);
+            res.json(wishlist?.wishList);
         }
-        res.json(existingWishlist?.cart);
+        res.json(existingWishlist?.wishList);
     } catch (error) {
         console.error(error);
         res.status(500);
