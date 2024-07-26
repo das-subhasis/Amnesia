@@ -15,7 +15,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
         throw new Error("Invalid credentials. Check email or password.");
     }
 
-    const existUser = await User.findOne({ email: email });
+    const existUser = await User.findOne({ email: email }).populate("cart.product");
     if (!existUser || !await bcrypt.compare(password, existUser.password)) {
         res.status(400);
         throw new Error("Invalid credentials. Check email or password.");
@@ -43,7 +43,7 @@ const register = asyncHandler(async (req: Request, res: Response) => {
         res.status(400);
         throw new Error("Invalid credentials. Check email or password.");
     }
-    const existUser = await User.findOne({ email: email });
+    const existUser = await User.findOne({ email: email }).populate("cart.product");
     if (existUser) {
         res.status(400);
         throw new Error("User already exists.");
@@ -56,6 +56,7 @@ const register = asyncHandler(async (req: Request, res: Response) => {
         password: hashedPassword,
         avatar: avatar || undefined
     });
+    newUser = await newUser.populate("cart.product");
     res.status(201).json({
         _id: newUser._id,
         username: newUser.username,
