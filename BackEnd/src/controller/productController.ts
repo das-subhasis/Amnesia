@@ -22,7 +22,7 @@ const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
 })
 
 // @route   GET /api/products/:category
-// @desc    Get a product by ID
+// @desc    Get a product by category
 // @access  Public
 const getProductByCategory = expressAsyncHandler(async (req: Request, res: Response) => {
     try {

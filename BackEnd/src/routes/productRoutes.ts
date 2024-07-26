@@ -6,9 +6,9 @@ const product = Router();
 
 product.get('/', getProducts);
 
-product.post('/add-product', authenticate, addProduct);
+product.post('/add', authenticate, addProduct);
 
-product.post('/add-basket', authenticate, addMultipleProducts);
+product.post('/add/multiple', authenticate, addMultipleProducts);
 
 product.put('/:id', authenticate, updateProductByID);
 
