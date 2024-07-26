@@ -124,4 +124,4 @@ const updateProductByID = expressAsyncHandler(async (req: Request, res: Response
     }
 })
 
-export { getProducts, getProductByCategory, getProductById, addProduct, deleteProductByID, updateProductByID, addMultipleProducts }
+export { getProducts, getProductByCategory, addProduct, deleteProductByID, updateProductByID, addMultipleProducts }
