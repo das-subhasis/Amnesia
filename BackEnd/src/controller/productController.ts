@@ -9,11 +9,16 @@ import { ProductInterface } from "../models/userSchema";
 const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        if (!id) {
+        const { product_name } = req.body;
+        if (!id && !product_name) {
             const product = await Product.find();
             res.json(product);
         }
-        const product = await Product.findById(id);
+        if (!product_name) {
+            const product = await Product.findById(id);
+            res.json(product);
+        }
+        const product = await Product.find({ name: product_name });
         res.json(product);
     } catch (error) {
         res.status(500);
@@ -26,7 +31,7 @@ const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
 // @access  Public
 const getProductByCategory = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        
+
         const category = req.params.category;
         const product = await Product.find({ category: category });
         if (!product) {
