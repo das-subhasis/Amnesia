@@ -16,24 +16,43 @@ exports.addMultipleProducts = exports.updateProductByID = exports.deleteProductB
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const productSchema_1 = __importDefault(require("../models/productSchema"));
 // @route   GET /api/products
-// @desc    Get all products
+// @desc    Get ( all products/ products by name)
 // @access  Public
 const getProducts = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const category = req.query.category;
-        if (!category) {
+        const product_name = req.params.product_name;
+        if (!product_name) {
             const product = yield productSchema_1.default.find();
             res.json(product);
+            return;
         }
-        const product = yield productSchema_1.default.find({ category });
+        const product = yield productSchema_1.default.find({ name: { $regex: { product_name, $options: "i" } } });
         res.json(product);
     }
     catch (error) {
+        console.log(error);
         res.status(500);
         throw new Error("Internal server error.");
     }
 }));
 exports.getProducts = getProducts;
+// @route   GET /api/products
+// @desc    Get products by ID
+// @access  Public
+const getProductById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const product = yield productSchema_1.default.findById(id);
+        if (!product) {
+            throw new Error(`Product id: ${id}. does not exist`);
+        }
+        res.json(product);
+    }
+    catch (error) {
+        console.log(error);
+        throw new Error("Internal server error.");
+    }
+}));
 // @route   GET /api/products/:category
 // @desc    Get a product by category
 // @access  Public

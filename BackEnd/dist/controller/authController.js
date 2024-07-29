@@ -26,7 +26,7 @@ const login = (0, express_async_handler_1.default)((req, res) => __awaiter(void 
         res.status(400);
         throw new Error("Invalid credentials. Check email or password.");
     }
-    const existUser = yield userSchema_1.default.findOne({ email: email });
+    const existUser = yield userSchema_1.default.findOne({ email: email }).populate("cart.product");
     if (!existUser || !(yield bcryptjs_1.default.compare(password, existUser.password))) {
         res.status(400);
         throw new Error("Invalid credentials. Check email or password.");
@@ -52,7 +52,7 @@ const register = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
         res.status(400);
         throw new Error("Invalid credentials. Check email or password.");
     }
-    const existUser = yield userSchema_1.default.findOne({ email: email });
+    const existUser = yield userSchema_1.default.findOne({ email: email }).populate("cart.product");
     if (existUser) {
         res.status(400);
         throw new Error("User already exists.");
@@ -65,6 +65,7 @@ const register = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
         password: hashedPassword,
         avatar: avatar || undefined
     });
+    newUser = yield newUser.populate("cart.product");
     res.status(201).json({
         _id: newUser._id,
         username: newUser.username,

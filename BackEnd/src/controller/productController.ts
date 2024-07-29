@@ -12,10 +12,13 @@ const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
         if (!product_name) {
             const product = await Product.find();
             res.json(product);
+            return;
         }
-        const product = await Product.find({ name: { $regex: { product_name, $options: "i" } } });
+        const product = await Product.find({ name: { $regex: product_name, $options: "i" } });
         res.json(product);
     } catch (error) {
+        console.log(error);
+
         res.status(500);
         throw new Error("Internal server error.")
     }
