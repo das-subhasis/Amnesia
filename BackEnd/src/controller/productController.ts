@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-import { Request, Response } from "express";
+import { query, Request, Response } from "express";
 import Product from "../models/productSchema";
 import { ProductInterface } from "../models/userSchema";
 
@@ -8,17 +8,16 @@ import { ProductInterface } from "../models/userSchema";
 // @access  Public
 const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        const id = req.params.id;
-        const { product_name } = req.body;
+        const { id, product_name } = req.params;
         if (!id && !product_name) {
             const product = await Product.find();
             res.json(product);
         }
-        if (!product_name) {
-            const product = await Product.findById(id);
+        if (!id) {
+            const product = await Product.find({ name: query});
             res.json(product);
         }
-        const product = await Product.find({ name: product_name });
+        const product = await Product.findById(id);
         res.json(product);
     } catch (error) {
         res.status(500);
