@@ -2,19 +2,12 @@ import React, { ChangeEvent, useState } from 'react';
 import { useUserContext } from '../../context/userContext';
 import client from '../../config/client';
 
-interface User {
-    username: string;
-    email: string;
-    password: string;
-    avatar: string;
-    address: string;
-}
 
 const Profile: React.FC = () => {
     const { userDispatch, uploadAvatar, userState } = useUserContext();
     const [editingAddress, setEditingAddress] = useState(false);
     const [address, setAddress] = useState(userState.address || '');
-    const [avatar, setAvatar] = useState<File | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(null);
 
     const handleAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
         setAddress(event.target.value);
@@ -35,8 +28,7 @@ const Profile: React.FC = () => {
     const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-            setAvatar(file);
-            const avatar = await uploadAvatar(file);
+            setAvatar(await uploadAvatar(file));
             try {
                 const response = await client.post('/user/update', { avatar }, { headers: { Authorization: `Bearer ${userState.token}` } });
                 if (response.status === 200) {

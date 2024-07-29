@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import axios from 'axios';
 import { useUserContext } from '../../context/userContext';
 import { useAuthContext } from '../../context/authContext';
 

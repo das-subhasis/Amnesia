@@ -1,6 +1,5 @@
 import Carousel from '../../components/Carousel';
 import { Link } from 'react-router-dom';
-import { useUserContext } from '../../context/userContext';
 import bottomwear from './bottomwear.jpg'
 import topwear from './topwear.jpg'
 import footwear from './footwear.jpg'
