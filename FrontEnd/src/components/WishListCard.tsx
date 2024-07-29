@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { ProductInterface } from "../context/userContext";
-import { FaMinus, FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/utils";
