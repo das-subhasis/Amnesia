@@ -1,10 +1,7 @@
 import React, { createContext, ReactNode, useContext, useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import { useAuthContext } from "./authContext";
-import WishList from "../pages/WishList/WishList";
-import productReducer from "../reducers/productReducer";
 import userReducer from "../reducers/userReducer";
-import { useFetchUser } from "../hooks/useFetchUser";
+import productReducer from "../reducers/productReducer";
 
 interface UserProviderProps {
     children: ReactNode;
@@ -17,15 +14,29 @@ export interface UserStateProps {
     token: string | null;
     avatar: string | null;
     address: string | null;
-    cart: ProductInterface[],
-    wishList: ProductInterface[]
+    cart: CartInterface[];
+    wishList: ProductInterface[];
 }
 
 interface UserContextType {
-    uploadAvatar: (file: File) => Promise<string>;
     userState: UserStateProps;
-    userDispatch: React.Dispatch<any>;
     initialUserState: UserStateProps;
+    products: ProductInterface[];
+    categories: string[]
+    orders: [];
+    loading: boolean;
+    error: string | null;
+    uploadAvatar: (file: File) => Promise<string>;
+    userDispatch: React.Dispatch<any>;
+    productDispatch: React.Dispatch<any>;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    setError: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+export interface ProductReducerProps {
+    products: ProductInterface[],
+    categories: string[]
+    orders: [],
 }
 
 export interface ProductInterface {
@@ -36,17 +47,20 @@ export interface ProductInterface {
     price: number;
     quantity: number;
     imageUrl: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-
+export interface CartInterface {
+    product: ProductInterface;
+    quantity: number;
+}
 
 const userContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
-    const initialUserState = {
+    const initialUserState: UserStateProps = JSON.parse(localStorage.getItem("userState")!) || {
         email: null,
         username: null,
         _id: null,
@@ -57,7 +71,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         wishList: []
     }
 
+    const initialProductState: ProductReducerProps = {
+        products: [],
+        categories: ['Topwear', 'Bottomwear', 'Footwear'],
+        orders: []
+    }
+
+
     const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+    const [{ products, categories, orders }, productDispatch] = useReducer(productReducer, initialProductState);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
 
     const uploadAvatar = async (file: File): Promise<string> => {
         if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -80,14 +105,26 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        if (!userState._id) {
-            const user = JSON.parse(localStorage.getItem("userState") || JSON.stringify(initialUserState))
-            userDispatch({ type: 'SET_USER', payload: user });
-        }
-    }, []);
+        localStorage.setItem("userState", JSON.stringify(userState));
+    }, [userState]);
 
     return (
-        <userContext.Provider value={{ userState, initialUserState, uploadAvatar, userDispatch, }}>
+        <userContext.Provider value={{
+            userState,
+            initialUserState,
+            products,
+            categories,
+            orders,
+            loading,
+            error,
+            setError,
+            setLoading,
+            uploadAvatar,
+            userDispatch,
+            productDispatch,
+        }}>
+
+
             {children}
         </userContext.Provider>
     );

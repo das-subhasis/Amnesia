@@ -30,8 +30,7 @@ const Signup: React.FC = () => {
     });
   };
 
-  console.log(user);
-  
+
   
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -39,10 +38,10 @@ const Signup: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Log in to your account
+          Create your own account
         </h2>
       </div>
 
@@ -85,7 +84,7 @@ const Signup: React.FC = () => {
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="file_input">Upload file</label>
             <input
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="block w-full text-sm "
               id="file_input"
               name='avatar'
               type="file"

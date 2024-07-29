@@ -7,7 +7,8 @@ export default {
   theme: {
     fontFamily:{
       mont: ["'Montserrat'", "sans-serif"],
-      roboto: ["'Roboto'", "sans-serif"]
+      roboto: ["'Roboto'", "sans-serif"],
+      fira: ["'Fira Code'", "monospace"]
     },
     extend: {},
   },

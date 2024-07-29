@@ -1,8 +1,8 @@
-import axios from "axios";
-import React, { createContext, ReactNode, useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, { createContext, ReactNode, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserStateProps, useUserContext } from "./userContext";
-import userReducer from "../reducers/userReducer";
+import { useUserContext } from "./userContext";
+import client from "../config/client";
+
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -30,14 +30,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             throw new Error("Must provide all information");
         }
         try {
-            const { data } = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+            const { data } = await client.post("auth/login", { email, password });
             console.log(data);
 
             userDispatch({ type: 'SET_USER', payload: data });
             localStorage.setItem("userState", JSON.stringify(data));
             navigate('/');
-        } catch (error) {
-            console.error("Login failed", error);
+        } catch (error: any) {
+            console.error("Login failed", error.response.data.message);
         }
     };
 
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             throw new Error("Must provide all information");
         }
         try {
-            const { data } = await axios.post("http://localhost:3000/api/auth/register", { username, email, password, avatar });
+            const { data } = await client.post("auth/register", { username, email, password, avatar });
             console.log(data);
             userDispatch({ type: 'SET_USER', payload: data });
             localStorage.setItem("userState", JSON.stringify(data));
@@ -57,8 +57,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const logout = () => {
-        userDispatch({ type: 'SET_USER', payload: initialUserState })
-        localStorage.removeItem("userState");
+        console.log('clicked');
+        userDispatch({ type: 'REMOVE_USER', payload: initialUserState })
         navigate('/login');
     };
 

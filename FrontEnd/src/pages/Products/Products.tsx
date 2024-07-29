@@ -1,42 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import useClickOutside from '../../hooks/useClickOutside';
+import { useUserContext } from '../../context/userContext';
+import client from '../../config/client';
+import Skeletons from '../../components/ProductSkeletons';
 import { useParams } from 'react-router-dom';
-import useProducts from '../../hooks/useProducts';
-import { capitalize } from '../../utils/utils';
-import { ProductInterface, useUserContext } from '../../context/userContext';
+import { capitalize } from 'lodash';
+import FilterSection from '../../components/FilterSection';
 
 const Products = () => {
     const [filter, setFilter] = useState<boolean>(false);
+    const { products, loading, setLoading, productDispatch } = useUserContext();
+    const ref = useClickOutside(() => setFilter(false));
+    const { id } = useParams();
     const toggleFilter = () => {
         setFilter(!filter);
     }
-    const [count, setCount] = useState(0);
+    useEffect(() => {
+        setLoading(true);
+        const getProducts = async () => {
+            try {
+                const response = await client.get(`/products/c/${capitalize(id)}`);
+                if (response.status === 200) {
+                    productDispatch({
+                        type: "SET_PRODUCTS",
+                        payload: response.data,
+                    });
+                    setLoading(false)
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        getProducts();
+    }, [])
 
-    const { userState, userDispatch } = useUserContext();
 
+console.log(filter);
 
-    const wishListHandler = (product: ProductInterface) => {
-        if (!userState._id) return
-        userDispatch({ type: 'SET_WISHLIST', payload: product });
-    }
-
-    const { id } = useParams();
-
-    const { products } = id ? useProducts(capitalize(id)) : { products: [] }
-
-
-    const ref = useClickOutside(() => setFilter(false));
-
-    console.log(count);
-    
-    
     return (
-        <div className='flex-1 flex flex-col px-20 ml-[2rem]'>
+        <div className='flex-1 flex flex-col px-20 ml-[2rem] gap-5'>
             {/* Filter Section */}
             <div
-                className='w-full z-1 mt-10 flex justify-between'
+                className='w-full z-1 mt-10 flex justify-between relative'
                 ref={ref}>
                 <div className='text-[12px] pt-5'>
                     SHOWING {products.length} RESULTS
@@ -48,12 +55,13 @@ const Products = () => {
                     Filter
                     {filter ? <MdOutlineKeyboardArrowUp size={15} /> : <MdOutlineKeyboardArrowDown size={15} />}
                 </button>
+                {filter && <FilterSection setFilter={setFilter} products={products}/>}
             </div>
             {/* Product Cards */}
-            <div className='flex-1 flex flex-wrap items-center  py-5  gap-10'>
+            <div className='flex-1 flex flex-wrap items-center justify-center xl:justify-normal py-5 gap-10'>
                 {
-                    products.map((product) => {
-                        return <Card key={product._id} product={product} Handler={wishListHandler} />
+                    loading ? Array.from({ length: 5 }).map((_, idx) => <Skeletons key={idx}/>) : products.map((product) => {
+                        return <Card key={product._id} product={product} />
                     })
                 }
             </div>
