@@ -4,9 +4,7 @@ import authenticate from "../middlewares/authMiddleware";
 
 const product = Router();
 
-product.get('/', getProducts);
-
-product.get('/id/', getProducts);
+product.get('/:product_name', getProducts);
 
 product.get('/c/:id', getProductByCategory);
 

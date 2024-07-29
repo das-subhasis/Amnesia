@@ -8,7 +8,7 @@ import { ProductInterface } from "../models/userSchema";
 // @access  Public
 const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        const { product_name } = req.body;
+        const product_name = req.params.product_name;
         if (!product_name) {
             const product = await Product.find();
             res.json(product);
