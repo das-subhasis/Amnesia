@@ -4,24 +4,38 @@ import Product from "../models/productSchema";
 import { ProductInterface } from "../models/userSchema";
 
 // @route   GET /api/products
-// @desc    Get all products
+// @desc    Get ( all products/ products by name)
 // @access  Public
 const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
     try {
-        const { id, product_name } = req.params;
-        if (!id && !product_name) {
+        const { product_name } = req.body;
+        if (!product_name) {
             const product = await Product.find();
             res.json(product);
         }
-        if (!id) {
-            const product = await Product.find({ name: query});
-            res.json(product);
-        }
-        const product = await Product.findById(id);
+        const product = await Product.find({ name: product_name });
         res.json(product);
     } catch (error) {
         res.status(500);
         throw new Error("Internal server error.")
+    }
+})
+
+// @route   GET /api/products
+// @desc    Get products by ID
+// @access  Public
+const getProductById = expressAsyncHandler(async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+        if (!product) {
+            throw new Error(`Product id: ${id}. does not exist`);
+        }
+        res.json(product);
+    } catch (error) {
+        console.log(error);
+        throw new Error("Internal server error.")
+
     }
 })
 

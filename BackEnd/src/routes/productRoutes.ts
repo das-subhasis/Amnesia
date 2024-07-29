@@ -6,7 +6,9 @@ const product = Router();
 
 product.get('/', getProducts);
 
-product.get('/id/:id', getProducts);
+product.get('/id/', getProducts);
+
+product.get('/c/:id', getProductByCategory);
 
 product.get('/c/:category', getProductByCategory);
 
