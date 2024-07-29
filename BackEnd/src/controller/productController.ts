@@ -13,7 +13,7 @@ const getProducts = expressAsyncHandler(async (req: Request, res: Response) => {
             const product = await Product.find();
             res.json(product);
         }
-        const product = await Product.find({ name: product_name });
+        const product = await Product.find({ name: { $regex: { product_name, $options: "i" } } });
         res.json(product);
     } catch (error) {
         res.status(500);
