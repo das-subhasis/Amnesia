@@ -20,8 +20,6 @@ Welcome to the MERN E-Commerce Project Amnesia! This full-stack e-commerce appli
 
 - **Frontend**: 
   - React.js
-  - Redux (for state management)
-  - Bootstrap or CSS/SCSS (for styling)
 - **Backend**: 
   - Node.js
   - Express.js
