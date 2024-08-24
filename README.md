@@ -2,7 +2,7 @@ Here is the plain text for your `README.md` file:
 
 ---
 
-# MERN E-Commerce Project (Amnesia)
+# Amnesia E-Commerce App
 
 ## Overview
 
